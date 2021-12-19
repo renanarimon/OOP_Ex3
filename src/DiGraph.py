@@ -1,5 +1,7 @@
 from GraphInterface import GraphInterface
 
+"""renanaaaaaaaaaaaaaaaaaaaa CIIIIIIIIIIIIIII"""
+
 
 class DigGraph(GraphInterface):
     def _init_(self):
@@ -43,5 +45,3 @@ class DigGraph(GraphInterface):
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         pass
-
-
