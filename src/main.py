@@ -1,5 +1,7 @@
-from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
+from DiGraph import DigGraph
+from DiGraph import DigGraph
+from src.DiGraph import DigGraph
 
 
 def check():
@@ -28,7 +30,7 @@ def check0():
     This function tests the naming (main methods of the DiGraph class, as defined in GraphInterface.
     :return:
     """
-    g = DiGraph()  # creates an empty directed graph
+    g = DigGraph()  # creates an empty directed graph
     for n in range(4):
         g.add_node(n)
     g.add_edge(0, 1, 1)
@@ -87,7 +89,7 @@ def check3():
     """ This function tests the naming, basic testing over A5 json file.
       :return:
       """
-    g = DiGraph()  # creates an empty directed graph
+    g = DigGraph()  # creates an empty directed graph
     for n in range(5):
         g.add_node(n)
     g.add_edge(0, 1, 1)
@@ -105,4 +107,9 @@ def check3():
 
 
 if __name__ == '__main__':
-    check()
+    graph = DigGraph()
+    algo = GraphAlgo()
+
+    algo.load_from_json(r"C:\Users\PC\PycharmProjects\Ex3\data\A0.json")
+
+    # check()
