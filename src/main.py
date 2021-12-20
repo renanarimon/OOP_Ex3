@@ -110,6 +110,9 @@ if __name__ == '__main__':
     graph = DigGraph()
     algo = GraphAlgo()
 
-    algo.load_from_json(r"C:\Users\PC\PycharmProjects\Ex3\data\A0.json")
+    algo.load_from_json(r"../data/A0.json")
+
+    print(algo.get_graph())
+    print(algo.get_graph().all_out_edges_of_node(3))
 
     # check()

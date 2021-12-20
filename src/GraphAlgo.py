@@ -1,8 +1,9 @@
 import json
+import os
 from types import SimpleNamespace
 
 from GraphAlgoInterface import GraphAlgoInterface
-from src.DiGraph import DigGraph
+from src.DiGraph import DigGraph, Node, Edge
 from src.GraphInterface import GraphInterface
 
 
@@ -16,8 +17,15 @@ class GraphAlgo(GraphAlgoInterface):
 
     def load_from_json(self, file_name: str) -> bool:
         with open(file_name, 'r') as file:
-            self.graph = json.load(
-                file, object_hook=lambda json_dict: SimpleNamespace(**json_dict))
+            l = json.load(file)
+            ListNodes = l['Nodes']
+            # Nodes = [Node(**n) for n in ListNodes]
+            ListEdges = l['Edges']
+            # Edges = [Edge(**e) for e in ListEdges]
+        for n in ListNodes:
+            self.graph.add_node(n['id'], n['pos'])
+        for e in ListEdges:
+            self.graph.add_edge(e['src'], e['dest'], e['w'])
         return True
 
     def save_to_json(self, file_name: str) -> bool:
