@@ -1,7 +1,7 @@
 from GraphAlgo import GraphAlgo
-from DiGraph import DigGraph, Node
-from DiGraph import DigGraph
-from src.DiGraph import DigGraph
+from DiGraph import DiGraph, Node
+from DiGraph import DiGraph
+from src.DiGraph import DiGraph
 
 import queue
 from queue import PriorityQueue
@@ -33,7 +33,7 @@ def check0():
     This function tests the naming (main methods of the DiGraph class, as defined in GraphInterface.
     :return:
     """
-    g = DigGraph()  # creates an empty directed graph
+    g = DiGraph()  # creates an empty directed graph
     for n in range(4):
         g.add_node(n)
     g.add_edge(0, 1, 1)
@@ -92,7 +92,7 @@ def check3():
     """ This function tests the naming, basic testing over A5 json file.
       :return:
       """
-    g = DigGraph()  # creates an empty directed graph
+    g = DiGraph()  # creates an empty directed graph
     for n in range(5):
         g.add_node(n)
     g.add_edge(0, 1, 1)
@@ -110,7 +110,7 @@ def check3():
 
 
 if __name__ == '__main__':
-    graph = DigGraph()
+    graph = DiGraph()
     algo = GraphAlgo()
 
     algo.load_from_json(r"../data/A1.json")

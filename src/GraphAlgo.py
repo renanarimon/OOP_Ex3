@@ -10,7 +10,7 @@ from typing import List
 from numpy import sort
 
 from GraphAlgoInterface import GraphAlgoInterface
-from src.DiGraph import DigGraph
+from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
 
 
@@ -18,7 +18,7 @@ class GraphAlgo(GraphAlgoInterface):
     INFINITY = math.inf
 
     def __init__(self):
-        self.graph = DigGraph()
+        self.graph = DiGraph()
 
     def get_graph(self) -> GraphInterface:
         return self.graph
@@ -40,6 +40,19 @@ class GraphAlgo(GraphAlgoInterface):
         for e in ListEdges:
             self.graph.add_edge(e['src'], e['dest'], e['w'])
         return True
+
+    def bfs(self, nodeId: int):
+        visited = [False] * (self.graph.v_size())
+        q = []
+        q.append(nodeId)
+        visited[nodeId] = True
+
+        while q:
+            startNode = q.pop(0)
+            for i in self.graph.nodes[startNode]:
+                if not visited[i]:
+                    q.append(i)
+                    visited[i] = True
 
     def restartNodes(self):
         for n in self.graph.nodes.values():
@@ -111,6 +124,25 @@ class GraphAlgo(GraphAlgoInterface):
             else:
                 return None
         return ans, weight
+
+    def maxShortPath(self, node_id: int) -> int:
+        self.dijkstra(node_id, -1)
+        maxW = -sys.maxsize
+        for n in self.graph.nodes:
+            if n.weight > maxW:
+                maxW = n.weight
+        return maxW
+
+    def centerPoint(self) -> (int, float):
+        minDist = sys.maxsize
+        minId = 0
+
+        for n in self.graph.nodes:
+            maxDist = self.maxShortPath(n.id)
+            if maxDist < minDist:
+                minDist = maxDist
+                minId = n.id
+        return minId, minDist
 
     def plot_graph(self) -> None:
         pass
