@@ -45,6 +45,7 @@ class DigGraph(GraphInterface):
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         if node_id not in self.nodes:
+            Node(pos, node_id)
             self.nodes[node_id] = pos
             self.children[node_id] = {}
             self.parents[node_id] = {}
@@ -55,16 +56,18 @@ class DigGraph(GraphInterface):
 
     def remove_node(self, node_id: int) -> bool:
         if node_id in self.nodes:
-            childrenTmp = self.all_out_edges_of_node(node_id)
-            parentsTmp = self.all_in_edges_of_node(node_id)
+            childrenTmp ={}
+                # self.all_out_edges_of_node(node_id)
+            parentsTmp = {}
+        # self.all_in_edges_of_node(node_id)
+        #     for n in self.all_out_edges_of_node[node_id]:
+        #         childrenTmp.update(self.children[n][node_id])
+        #     for n in self.all_in_edges_of_node[node_id]:
+        #         parentsTmp.update(self.parents[n][node_id])
 
-            for n in childrenTmp:
-                self.remove_edge(node_id, n)
-                del self.children[n][node_id]
-                self.MC += 1
-            for n in parentsTmp:
-                del self.parents[n][node_id]
-                self.MC += 1
+            for n in list(self.children[node_id]):
+                self.remove_edge(n,node_id)
+                self.remove_edge(node_id,n)
             del self.nodes[node_id]
             return True
         else:
@@ -72,7 +75,7 @@ class DigGraph(GraphInterface):
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         if node_id1 and node_id2 in self.nodes \
-                and node_id1 in self.children and node_id2 in self.parents:
+                and node_id1 in self.children.keys() and node_id2 in self.parents.keys():
             del self.parents[node_id2][node_id1]
             del self.children[node_id1][node_id2]
             self.MC += 1
