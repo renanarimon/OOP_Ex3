@@ -7,8 +7,6 @@ import sys
 from queue import PriorityQueue
 from typing import List
 
-from numpy import sort
-
 from GraphAlgoInterface import GraphAlgoInterface
 from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
@@ -58,6 +56,7 @@ class GraphAlgo(GraphAlgoInterface):
         for n in self.graph.nodes.values():
             n.father = None
             n.weight = self.INFINITY
+            n.visited = 0
 
     def dijkstra(self, src: int, dest: int):
         self.restartNodes()
@@ -71,14 +70,14 @@ class GraphAlgo(GraphAlgoInterface):
                 if curr.id == dest:
                     return
                 curr.visited = 1
-                for v in self.graph.all_out_edges_of_node(curr.id):
-                    self.relax(curr.id, v)
-                    pq.put(self.graph.nodes.get(v))
+                for d in self.graph.all_out_edges_of_node(curr.id):
+                    self.relax(curr.id, d)
+                    pq.put(self.graph.nodes.get(d))
 
     def relax(self, src: int, dest: int):
         srcNode = self.graph.nodes[src]
         destNode = self.graph.nodes[dest]
-        edgeWeight = self.graph.all_in_edges_of_node(src)[dest]
+        edgeWeight = self.graph.all_out_edges_of_node(src)[dest]
         if destNode.weight > srcNode.weight + edgeWeight:
             destNode.weight = srcNode.weight + edgeWeight
             destNode.father = srcNode
@@ -111,7 +110,7 @@ class GraphAlgo(GraphAlgoInterface):
         ans = []
         currNode = node_lst.pop(0)
         ans.append(0)
-        bestNode = Node
+        # bestNode = Node
         weight = 0
         while node_lst:
             bestNode, put, tmp_wei = self.minShortPath(currNode, node_lst)
@@ -128,7 +127,7 @@ class GraphAlgo(GraphAlgoInterface):
     def maxShortPath(self, node_id: int) -> int:
         self.dijkstra(node_id, -1)
         maxW = -sys.maxsize
-        for n in self.graph.nodes:
+        for n in self.graph.nodes.values():
             if n.weight > maxW:
                 maxW = n.weight
         return maxW
@@ -137,7 +136,7 @@ class GraphAlgo(GraphAlgoInterface):
         minDist = sys.maxsize
         minId = 0
 
-        for n in self.graph.nodes:
+        for n in self.graph.nodes.values():
             maxDist = self.maxShortPath(n.id)
             if maxDist < minDist:
                 minDist = maxDist

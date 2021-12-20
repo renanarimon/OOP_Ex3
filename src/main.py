@@ -113,12 +113,6 @@ if __name__ == '__main__':
     graph = DiGraph()
     algo = GraphAlgo()
 
-    algo.load_from_json(r"../data/A1.json")
+    algo.load_from_json(r"../data/T0.json")
+    print(algo.centerPoint())
 
-    print("before")
-    for n in algo.graph.nodes.values():
-        print(n.weight)
-    algo.dijkstra(0, -1)
-    print("after")
-    for n in algo.graph.nodes.values():
-        print(n.weight)
