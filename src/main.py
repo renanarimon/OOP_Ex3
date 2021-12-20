@@ -1,7 +1,10 @@
 from GraphAlgo import GraphAlgo
-from DiGraph import DigGraph
+from DiGraph import DigGraph, Node
 from DiGraph import DigGraph
 from src.DiGraph import DigGraph
+
+import queue
+from queue import PriorityQueue
 
 
 def check():
@@ -110,9 +113,12 @@ if __name__ == '__main__':
     graph = DigGraph()
     algo = GraphAlgo()
 
-    algo.load_from_json(r"../data/A0.json")
+    algo.load_from_json(r"../data/A1.json")
 
-    print(algo.get_graph())
-    print(algo.get_graph().all_out_edges_of_node(3))
-
-    # check()
+    print("before")
+    for n in algo.graph.nodes.values():
+        print(n.weight)
+    algo.dijkstra(0, -1)
+    print("after")
+    for n in algo.graph.nodes.values():
+        print(n.weight)

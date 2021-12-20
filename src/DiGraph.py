@@ -1,3 +1,6 @@
+import math
+import functools
+
 from GraphInterface import GraphInterface
 
 
@@ -34,7 +37,9 @@ class DigGraph(GraphInterface):
         return self.children[id1]
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
-        if id1 and id2 in self.nodes and id1 != id2:
+        if self.nodes[id1] is not None and self.nodes[id2] is not None and id1 != id2:
+            e = Edge(id1, weight, id2)
+
             self.children[id1].update({id2: weight})
             self.parents[id2].update({id1: weight})
             self.MC += 1
@@ -45,7 +50,8 @@ class DigGraph(GraphInterface):
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         if node_id not in self.nodes:
-            self.nodes[node_id] = pos
+            newOne = Node(node_id, pos)
+            self.nodes[node_id] = newOne
             self.children[node_id] = {}
             self.parents[node_id] = {}
             self.MC += 1
@@ -55,16 +61,9 @@ class DigGraph(GraphInterface):
 
     def remove_node(self, node_id: int) -> bool:
         if node_id in self.nodes:
-            childrenTmp = self.all_out_edges_of_node(node_id)
-            parentsTmp = self.all_in_edges_of_node(node_id)
-
-            for n in childrenTmp:
+            for n in list(self.children[node_id]):
+                self.remove_edge(n, node_id)
                 self.remove_edge(node_id, n)
-                del self.children[n][node_id]
-                self.MC += 1
-            for n in parentsTmp:
-                del self.parents[n][node_id]
-                self.MC += 1
             del self.nodes[node_id]
             return True
         else:
@@ -72,7 +71,7 @@ class DigGraph(GraphInterface):
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         if node_id1 and node_id2 in self.nodes \
-                and node_id1 in self.children and node_id2 in self.parents:
+                and node_id1 in self.children.keys() and node_id2 in self.parents.keys():
             del self.parents[node_id2][node_id1]
             del self.children[node_id1][node_id2]
             self.MC += 1
@@ -86,9 +85,18 @@ class DigGraph(GraphInterface):
 
 
 class Node:
-    def __init__(self, pos: float, id1: int):
+    def __init__(self, id1: int, pos: tuple = None):
         self.pos = pos
         self.id = id1
+        self.father = None
+        self.weight = math.inf
+        self.visited = 0
+
+    def __lt__(self, other):
+        return self.weight < getattr(other, 'weight', other)
+
+    def __eq__(self, other):
+        return self.weight == getattr(other, 'weight', other)
 
     def __str__(self) -> str:
         st = str(self.id)
@@ -101,5 +109,3 @@ class Edge:
         self.w = w
         self.dest = dest
 
-    # def __str__(self) -> str:
-    #     st = "("
