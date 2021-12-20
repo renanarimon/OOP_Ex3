@@ -110,9 +110,5 @@ def check3():
 
 
 if __name__ == '__main__':
-    graph = DiGraph()
-    algo = GraphAlgo()
 
-    algo.load_from_json(r"../data/T0.json")
-    print(algo.centerPoint())
-
+    check3()

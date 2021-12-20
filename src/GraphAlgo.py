@@ -1,10 +1,8 @@
 import json
 import math
-import os
 import random
 import queue
 import sys
-from queue import PriorityQueue
 from typing import List
 
 from GraphAlgoInterface import GraphAlgoInterface
@@ -15,8 +13,8 @@ from src.GraphInterface import GraphInterface
 class GraphAlgo(GraphAlgoInterface):
     INFINITY = math.inf
 
-    def __init__(self):
-        self.graph = DiGraph()
+    def __init__(self, g: DiGraph = DiGraph()):
+        self.graph = g
 
     def get_graph(self) -> GraphInterface:
         return self.graph
@@ -39,18 +37,46 @@ class GraphAlgo(GraphAlgoInterface):
             self.graph.add_edge(e['src'], e['dest'], e['w'])
         return True
 
-    def bfs(self, nodeId: int):
-        visited = [False] * (self.graph.v_size())
+    def copy(self):
+        g = DiGraph()
+        for n in self.graph.nodes.values():
+            g.add_node(n.id, n.pos)
+            for k in self.graph.all_out_edges_of_node(n.id):
+                w = self.graph.children[n.id][k]
+                g.add_edge(n.id, k, w)
+        return g
+
+    def transpose(self):
+        g = self.copy()
+        tmp = g.children
+        g.children = g.parents
+        g.parents = tmp
+        return g
+
+    def bfs(self, g: DiGraph, nodeId: int) -> list:
+        visited = [False] * (g.v_size())
         q = []
         q.append(nodeId)
         visited[nodeId] = True
-
         while q:
             startNode = q.pop(0)
-            for i in self.graph.nodes[startNode]:
-                if not visited[i]:
-                    q.append(i)
-                    visited[i] = True
+            for e in g.all_out_edges_of_node(startNode):
+                if not visited[e]:
+                    q.append(e)
+                    visited[e] = True
+        return visited
+
+    def isConnected(self) -> bool:
+        start = self.graph.nodes[0].id
+        visited = self.bfs(self.graph, start)
+        for b in visited:
+            if b == 0:
+                return False
+        visited = self.bfs(self.transpose(), start)
+        for b in visited:
+            if b == 0:
+                return False
+        return True
 
     def restartNodes(self):
         for n in self.graph.nodes.values():
@@ -83,7 +109,25 @@ class GraphAlgo(GraphAlgoInterface):
             destNode.father = srcNode
 
     def save_to_json(self, file_name: str) -> bool:
-        pass
+        if self.graph is None:
+            return False
+        dict_ans = {"Edges": [], "Nodes": []}
+        for n in self.graph.nodes.values():
+            node_dict = {"id": n.id}
+            if n.pos is not None:
+                node_dict["pos"] = n.pos_to_string()
+            dict_ans["Nodes"].append(node_dict)
+            for e in self.graph.all_out_edges_of_node(n.id):
+                edges_dict = {"src": n.id, "w": self.graph.all_out_edges_of_node(n.id)[e], "dest": e}
+                dict_ans["Edges"].append(edges_dict)
+        try:
+            with open(file_name, 'w') as writer:
+                writer.write(json.dumps(dict_ans))
+                return True
+        except:
+            return False
+        finally:
+            writer.close()
 
     def minShortPath(self, node_id: int, node_lst: List[int]) -> (int, list, float):
         self.dijkstra(node_id, -1)
@@ -96,28 +140,41 @@ class GraphAlgo(GraphAlgoInterface):
                 ans = i
         last = ans
         weight_till = self.graph.nodes[last].weight
-        while self.graph.nodes[last] is not None:
-            path.append(self.graph.nodes[last].father)
-            weight_till += self.graph.nodes[last].father.weight
-            last = self.graph.nodes[last].father
+        path, weight_till = self.findParentPath(last, weight_till, path)
         path.append(node_id)
+        path.reverse()
         return ans, path, weight_till
 
+    def findParentPath(self, idCurr: int, weight: float, listAdd: list):
+        while self.graph.nodes[idCurr].father is not None:
+            listAdd.append(idCurr)
+            weight += self.graph.nodes[idCurr].father.weight
+            idCurr = self.graph.nodes[idCurr].father.id
+        return listAdd, weight
+
     def shortest_path(self, id1: int, id2: int) -> (float, list):
-        pass
+        self.dijkstra(id1, id2)
+        weightAns = self.graph.nodes[id2].weight
+        listAns = []
+        curr = id2
+        listAns, weightAns = self.findParentPath(curr, weightAns, listAns)
+        listAns.append(id1)
+        listAns.reverse()
+        return weightAns, listAns
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         ans = []
         currNode = node_lst.pop(0)
         ans.append(0)
-        # bestNode = Node
+        bestNode = 0
         weight = 0
-        while node_lst:
+        while len(node_lst) > 0:
+            put = []
             bestNode, put, tmp_wei = self.minShortPath(currNode, node_lst)
             if bestNode != currNode:
                 weight += tmp_wei
-                put.remove(0)
-                ans.append(put)
+                put.pop(0)
+                ans = ans + put
                 node_lst.remove(bestNode)
                 currNode = bestNode
             else:
@@ -133,9 +190,11 @@ class GraphAlgo(GraphAlgoInterface):
         return maxW
 
     def centerPoint(self) -> (int, float):
+        if not self.isConnected():
+            return -1, self.INFINITY
+
         minDist = sys.maxsize
         minId = 0
-
         for n in self.graph.nodes.values():
             maxDist = self.maxShortPath(n.id)
             if maxDist < minDist:
@@ -144,4 +203,5 @@ class GraphAlgo(GraphAlgoInterface):
         return minId, minDist
 
     def plot_graph(self) -> None:
+
         pass

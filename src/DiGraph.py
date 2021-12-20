@@ -11,7 +11,7 @@ class DiGraph(GraphInterface):
     parents = {}
     MC = 0
 
-    def _init_(self):
+    def __init__(self):
         self.nodes = {}
         self.edgesAmount = 0
         self.children = {}
@@ -37,14 +37,13 @@ class DiGraph(GraphInterface):
         return self.children[id1]
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
-        if self.nodes[id1] is not None and self.nodes[id2] is not None and id1 != id2:
-            e = Edge(id1, weight, id2)
-
-            self.children[id1].update({id2: weight})
-            self.parents[id2].update({id1: weight})
-            self.MC += 1
-            self.edgesAmount += 1
-            return True
+        if id1 and id2 in self.nodes.keys():
+            if self.nodes[id1] is not None and self.nodes[id2] is not None and id1 != id2:
+                self.children[id1].update({id2: weight})
+                self.parents[id2].update({id1: weight})
+                self.MC += 1
+                self.edgesAmount += 1
+                return True
         else:
             return False
 
@@ -101,6 +100,10 @@ class Node:
     def __str__(self) -> str:
         st = str(self.id)
         return st
+
+    def pos_to_string(self):
+        string = "{},{},{}".format(self.pos[0], self.pos[1], self.pos[2])
+        return string
 
 
 class Edge:
