@@ -6,8 +6,10 @@ import sys
 from typing import List
 
 from GraphAlgoInterface import GraphAlgoInterface
+from src import GUI
 from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
+import GUI
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -203,5 +205,5 @@ class GraphAlgo(GraphAlgoInterface):
         return minId, minDist
 
     def plot_graph(self) -> None:
-
+        GUI.scale()
         pass
