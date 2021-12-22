@@ -37,13 +37,14 @@ class DiGraph(GraphInterface):
         return self.children[id1]
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
-        if id1 and id2 in self.nodes.keys():
-            if self.nodes[id1] is not None and self.nodes[id2] is not None and id1 != id2:
-                self.children[id1].update({id2: weight})
-                self.parents[id2].update({id1: weight})
-                self.MC += 1
-                self.edgesAmount += 1
-                return True
+        if self.nodes.get(id1) is not None and self.nodes.get(id2) is not None:
+            if self.children[id1].get(id2) is not None:
+                return False
+            self.children[id1].update({id2: weight})
+            self.parents[id2].update({id1: weight})
+            self.MC += 1
+            self.edgesAmount += 1
+            return True
         else:
             return False
 
