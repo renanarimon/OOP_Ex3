@@ -115,7 +115,4 @@ if __name__ == '__main__':
     g_algo.load_from_json(file)
     graph = g_algo.graph
 
-    for n in graph.nodes.values():
-        p = n.pos.split(",")
-        print(p[0])
-    check3()
+    check()
