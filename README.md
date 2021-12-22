@@ -25,8 +25,8 @@ main classes:
   [Graph_center](https://en.wikipedia.org/wiki/Graph_center)
 - tsp():Computes a list of consecutive nodes which go over all the nodes in cities. 
   [Travelling_salesman_problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
-  - save(): save the Graph as Json file
-  - load(): allowing to load a Json file
+- save(): save the Graph as Json file
+- load(): allowing to load a Json file
   
   ## After runing chack1() we get the folow plot:<br />
   ![image](https://user-images.githubusercontent.com/77111035/147135861-c6e53370-39be-4482-878e-c0245d2cbbc5.png)
