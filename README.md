@@ -29,13 +29,12 @@ main classes:
   - load(): allowing to load a Json file
   
   ## After runing chack1() we get the folow plot:<br />
- ![image](https://user-images.githubusercontent.com/77111035/147135522-b2850adc-269f-48d9-9a96-cdb085f1b3e5.png)
-
+  ![image](https://user-images.githubusercontent.com/77111035/147135743-61e123e5-af20-4bb2-ae1a-398d659a681a.png)
   ## After runing chack2() we get the folow plot:<br />
-  ![image](https://user-images.githubusercontent.com/77111035/147135054-3aea24a6-5dd5-4a65-8ef7-3ec05250c188.png)
+ ![image](https://user-images.githubusercontent.com/77111035/147135784-e396edf5-756a-42f5-bbc3-3a4f8fc09c82.png)
 
   ## After runing chack3() we get the folow plot:<br />
-  ![image](https://user-images.githubusercontent.com/77111035/147135096-3500a474-bc67-4203-ace8-c6ed5a5113c9.png)
+  ![image](https://user-images.githubusercontent.com/77111035/147135807-fc354638-b43b-4371-afe7-c08a3afa133b.png)
 
   
   
