@@ -111,8 +111,16 @@ def check3():
 
 if __name__ == '__main__':
     g_algo = GraphAlgo()
-    file = '../data/A0.json'
+    file = '../data/A3.json'
     g_algo.load_from_json(file)
     graph = g_algo.graph
+    print(graph.v_size())
 
-    check()
+    file = '../data/A1.json'
+    g_algo.load_from_json(file)
+    graph = g_algo.graph
+    print(graph.v_size())
+
+
+
+    # check()

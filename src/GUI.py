@@ -21,7 +21,18 @@ screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
 clock = pygame.time.Clock()
 pygame.font.init()
 
-FONT = pygame.font.SysFont('Arial', 20, bold=True)
+gray = Color(64, 64, 64)
+blue = Color(6, 187, 193)
+yellow = Color(255, 255, 102)
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+FONT = pygame.font.SysFont('Arial', 20)
+
+manager = pygame_gui.UIManager((800, 600))
+btn1 = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (100, 50)),
+                                    text='Say Hello',
+                                    manager=manager)
 
 
 def scale(data, min_screen, max_screen, min_data, max_data):
@@ -56,32 +67,39 @@ def drawNode(n1: Node):
     rect = id_srf.get_rect(center=(x, y))
     screen.blit(id_srf, rect)
 
-def draw_arrow(screen, colour, start, end):
-    pygame.draw.line(screen,colour,start,end,2)
-    rotation = math.degrees(math.atan2(start[1]-end[1], end[0]-start[0]))+90
-    pygame.draw.polygon(screen, white, ((end[0]+20*math.sin(math.radians(rotation)),
-                                               end[1]+20*math.cos(math.radians(rotation))),
-                                              (end[0]+20*math.sin(math.radians(rotation-120)),
-                                               end[1]+20*math.cos(math.radians(rotation-120))),
-                                              (end[0]+20*math.sin(math.radians(rotation+120)),
-                                               end[1]+20*math.cos(math.radians(rotation+120)))))
+
+def draw_arrow(sc, color, start, end):
+    pygame.draw.line(sc, color, start, end, 2)
+    rotation = math.degrees(math.atan2(start[1] - end[1], end[0] - start[0])) + 90
+    pygame.draw.polygon(sc, white, ((end[0] + 10 * math.sin(math.radians(rotation)),
+                                     end[1] + 10 * math.cos(math.radians(rotation))),
+                                    (end[0] + 10 * math.sin(math.radians(rotation - 120)),
+                                     end[1] + 10 * math.cos(math.radians(rotation - 120))),
+                                    (end[0] + 10 * math.sin(math.radians(rotation + 120)),
+                                     end[1] + 10 * math.cos(math.radians(rotation + 120)))))
 
 
-def DrawArrow(screen, x, y, color, angle=0):
-    def rotate(pos, angle):
-        cen = (5 + x, 0 + y)
-        angle *= -(math.pi / 180)
-        cos_theta = math.cos(angle)
-        sin_theta = math.sin(angle)
-        ret = ((cos_theta * (pos[0] - cen[0]) - sin_theta * (pos[1] - cen[1])) + cen[0],
-               (sin_theta * (pos[0] - cen[0]) + cos_theta * (pos[1] - cen[1])) + cen[1])
-        return ret
+# def DrawArrow(sc, x, y, color, angle=0):
+#     def rotate(pos, ang):
+#         cen = (5 + x, 0 + y)
+#         ang *= -(math.pi / 180)
+#         cos_theta = math.cos(ang)
+#         sin_theta = math.sin(ang)
+#         ret = ((cos_theta * (pos[0] - cen[0]) - sin_theta * (pos[1] - cen[1])) + cen[0],
+#                (sin_theta * (pos[0] - cen[0]) + cos_theta * (pos[1] - cen[1])) + cen[1])
+#         return ret
+#
+#     p0 = rotate((0 + x, -4 + y), angle + 90)
+#     p1 = rotate((0 + x, 4 + y), angle + 90)
+#     p2 = rotate((10 + x, 0 + y), angle + 90)
+#
+#     pygame.draw.polygon(sc, color, [p0, p1, p2])
 
-    p0 = rotate((0 + x, -4 + y), angle + 90)
-    p1 = rotate((0 + x, 4 + y), angle + 90)
-    p2 = rotate((10 + x, 0 + y), angle + 90)
+def drawArrow(sc, x, y, x2, y2):
+    angle = math.atan2(y2-y, x2-x)
+    # pygame.draw.line(sc,white, (x,y), (x2 - 10*math.cos(angle), y2-10*math.sin(angle)))
+    pygame.draw.polygon(sc, white, ((0,0), (-5,-10), (5, -10)))
 
-    pygame.draw.polygon(screen, color, [p0, p1, p2])
 
 def drawEdge(n: Node, color: Color):
     src = n
@@ -95,8 +113,9 @@ def drawEdge(n: Node, color: Color):
         # pygame.draw.polygon(screen, (0, 0, 0),
         #                     ((0, 100), (0, 200), (200, 200), (200, 300), (300, 150), (200, 0), (200, 100)))
 
-        # DrawArrow(screen, (src_x-10, src_y-10), (dest_x-10, dest_y-10), white)
-        pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y))
+        draw_arrow(screen, white, (src_x, src_y), (dest_x, dest_y))
+        # drawArrow(screen, src_x-10, src_y-10, dest_x-10, dest_y-10)
+        # pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y))
 
 
 while (True):
