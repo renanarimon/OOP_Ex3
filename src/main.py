@@ -110,12 +110,4 @@ def check3():
 
 
 if __name__ == '__main__':
-    # g_algo = GraphAlgo()
-    # file = '../data/A0.json'
-    # g_algo.load_from_json(file)
-    # graph = g_algo.graph
-    # print(g_algo.isConnected())
-
-
-
-    check3()
+    check()
