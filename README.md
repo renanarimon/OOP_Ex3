@@ -38,9 +38,9 @@ main classes:
   
   ## How to run the program : 
   in the main.py: go to main and create a AlgoGraph on this way:<br />
-  g_algo = GraphAlgo()<br />
-  file = '../data/A5.json' (enter a jason file you wuold like to load)br />
-  g_algo.load_from_json(file)<br />
+  g_algo = GraphAlgo() <br />
+  file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
+  g_algo.load_from_json(file) <br />
   and then enter on this graph any algorithm you want to try
 
   
