@@ -20,13 +20,17 @@ class GraphAlgo(GraphAlgoInterface):
         return self.graph
 
     def load_from_json(self, file_name: str) -> bool:
+        self.graph.__init__()
         with open(file_name, 'r') as file:
             l = json.load(file)
             ListNodes = l['Nodes']
             ListEdges = l['Edges']
         for n in ListNodes:
             try:
-                pos = n['pos']
+                tmp = n['pos'].split(",")
+                x = float(tmp[0])
+                y = float(tmp[1])
+                pos = (x, y, 0.0)
             except Exception:
                 x = random.uniform(35.19, 35.22)
                 y = random.uniform(32.05, 32.22)
