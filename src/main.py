@@ -108,6 +108,15 @@ def check3():
     print(g_algo.TSP([1, 2, 4]))
     g_algo.plot_graph()
 
-
+import time
 if __name__ == '__main__':
-    check()
+    algo = GraphAlgo()
+    algo.load_from_json('../data/1000Nodes.json')
+
+    city = []
+    for n in algo.graph.nodes.values():
+        city.append(n.id)
+    start_time = time.time()
+    algo.TSP(city)
+    print("--- %s seconds ---" % (time.time() - start_time))
+    # check()

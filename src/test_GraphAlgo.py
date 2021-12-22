@@ -9,19 +9,17 @@ class TestGraphAlgo(TestCase):
     def test_load_from_json(self):
         g_algo = GraphAlgo()
         file1 = '../data/A5.json'
-        file2 = '../data/A1.json'
-        file3 = '../data/A3.json'
         g_algo.load_from_json(file1)
-        graph = g_algo.graph
-        self.assertEqual(graph.v_size(), 48)
-        g_algo.load_from_json(file2)
-        self.assertEqual(graph.v_size(), 17)
-        g_algo.load_from_json(file3)
-        self.assertEqual(graph.v_size(), 49)
+
+    def test_save(self):
+        g_algo = GraphAlgo()
+        file1 = '../data/1000Nodes.json'
+        g_algo.load_from_json(file1)
+        self.assertEqual(g_algo.graph.v_size(), 1000)
 
     def test_shortest_path(self):
         g_algo = GraphAlgo()
-        file1 = '../data/A1.json'
+        file1 = '../data/1000Nodes.json'
         g_algo.load_from_json(file1)
         self.assertEqual(g_algo.shortest_path(0, 8), (22.59506068993273, [0, 1, 2, 6, 7, 8]))
         self.assertEqual(g_algo.shortest_path(0, 16), (1.3118716362419698, [0, 16]))
@@ -31,11 +29,13 @@ class TestGraphAlgo(TestCase):
         g_algo = GraphAlgo()
         file1 = '../data/A0.json'
         file2 = '../data/A1.json'
+
         g_algo.load_from_json(file1)
         cities = []
         for n in g_algo.graph.nodes.values():
             cities.append(n.id)
         self.assertEqual(g_algo.TSP(cities), ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 14.470852790366884))
+
         g_algo.load_from_json(file2)
         cities = []
         for n in g_algo.graph.nodes.values():
@@ -51,7 +51,6 @@ class TestGraphAlgo(TestCase):
         file4 = '../data/A3.json'
         file5 = '../data/A4.json'
         file6 = '../data/A5.json'
-        # file1000 = '../data/1000Nodes.json'
         g_algo.load_from_json(file1)
         self.assertEqual(g_algo.centerPoint(), (7, 6.806805834715163))
         g_algo.load_from_json(file2)
@@ -85,3 +84,9 @@ class TestGraphAlgo(TestCase):
         self.assertTrue(g_algo.isConnected())
         g_algo.load_from_json(file6)
         self.assertTrue(g_algo.isConnected())
+
+    def test_dijkstra(self):
+        g_algo = GraphAlgo()
+        file1 = '../data/A0.json'
+        g_algo.load_from_json(file1)
+        g_algo.dijkstra(0, -1)
