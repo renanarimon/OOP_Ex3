@@ -29,7 +29,7 @@ main classes:
   - load(): allowing to load a Json file
   
   ## After runing chack1() we get the folow plot:<br />
-  ![image](https://user-images.githubusercontent.com/77111035/147135001-d5074841-fbad-4d39-b525-4d97314d6d2e.png)
+ ![image](https://user-images.githubusercontent.com/77111035/147135522-b2850adc-269f-48d9-9a96-cdb085f1b3e5.png)
 
   ## After runing chack2() we get the folow plot:<br />
   ![image](https://user-images.githubusercontent.com/77111035/147135054-3aea24a6-5dd5-4a65-8ef7-3ec05250c188.png)
