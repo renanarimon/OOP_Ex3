@@ -1,5 +1,6 @@
 import math
 import functools
+import random
 
 from GraphInterface import GraphInterface
 
@@ -50,6 +51,10 @@ class DiGraph(GraphInterface):
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         if node_id not in self.nodes:
+            if pos is None:
+                x = random.uniform(35.19, 35.22)
+                y = random.uniform(32.05, 32.22)
+                pos = (x, y, 0.0)
             newOne = Node(node_id, pos)
             self.nodes[node_id] = newOne
             self.children[node_id] = {}
@@ -70,8 +75,12 @@ class DiGraph(GraphInterface):
             return False
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
+        try:
+            p = self.children[node_id1][node_id2]
+        except:
+            p = None
         if node_id1 and node_id2 in self.nodes \
-                and node_id1 in self.children.keys() and node_id2 in self.parents.keys():
+                and p is not None:
             del self.parents[node_id2][node_id1]
             del self.children[node_id1][node_id2]
             self.MC += 1

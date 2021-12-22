@@ -7,9 +7,9 @@ from pygame.constants import RESIZABLE
 import pygame_gui
 import numpy as np
 
-from src.Button import Button
 from src.DiGraph import Node
 from src.GraphAlgo import GraphAlgo
+from src.InputBox import InputBox
 
 g_algo = GraphAlgo()
 file = '../data/A1.json'
@@ -23,6 +23,21 @@ yellow = Color(255, 255, 102)
 black = Color(0, 0, 0)
 white = Color(255, 255, 255)
 pink = Color(255, 153, 104)
+
+user_text = ""
+color_active = white
+color_pasive = black
+color = color_pasive
+active = False
+
+# input_box = pygame.Rect(100, 100, 140, 32)
+# text = ""
+
+tsp = False
+
+input_box1 = InputBox(100, 100, 140, 32)
+# input_box2 = InputBox(100, 300, 140, 32)
+# input_boxes = [input_box1, input_box2]
 
 pygame.init()
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
@@ -43,6 +58,9 @@ btnTsp = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 0), (110, 
 btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((200, 0), (110, 50)),
                                               text='SHORTED PATH',
                                               manager=manager)
+
+cen = False
+node = Node(0)
 
 
 def scale(data, min_screen, max_screen, min_data, max_data):
@@ -78,39 +96,6 @@ def drawNode(n1: Node, color: Color):
     screen.blit(id_srf, rect)
 
 
-# def draw_arrow(sc, color, start, end):
-#     pygame.draw.line(sc, color, start, end, 2)
-#     rotation = math.degrees(math.atan2(start[1] - end[1], end[0] - start[0])) + 90
-#     pygame.draw.polygon(sc, white, ((end[0] + 10 * math.sin(math.radians(rotation)),
-#                                      end[1] + 10 * math.cos(math.radians(rotation))),
-#                                     (end[0] + 10 * math.sin(math.radians(rotation - 120)),
-#                                      end[1] + 10 * math.cos(math.radians(rotation - 120))),
-#                                     (end[0] + 10 * math.sin(math.radians(rotation + 120)),
-#                                      end[1] + 10 * math.cos(math.radians(rotation + 120)))))
-#
-#
-# # def DrawArrow(sc, x, y, color, angle=0):
-# #     def rotate(pos, ang):
-# #         cen = (5 + x, 0 + y)
-# #         ang *= -(math.pi / 180)
-# #         cos_theta = math.cos(ang)
-# #         sin_theta = math.sin(ang)
-# #         ret = ((cos_theta * (pos[0] - cen[0]) - sin_theta * (pos[1] - cen[1])) + cen[0],
-# #                (sin_theta * (pos[0] - cen[0]) + cos_theta * (pos[1] - cen[1])) + cen[1])
-# #         return ret
-# #
-# #     p0 = rotate((0 + x, -4 + y), angle + 90)
-# #     p1 = rotate((0 + x, 4 + y), angle + 90)
-# #     p2 = rotate((10 + x, 0 + y), angle + 90)
-# #
-# #     pygame.draw.polygon(sc, color, [p0, p1, p2])
-#
-# def drawArrow(sc, x, y, x2, y2):
-#     angle = math.atan2(y2-y, x2-x)
-#     # pygame.draw.line(sc,white, (x,y), (x2 - 10*math.cos(angle), y2-10*math.sin(angle)))
-#     pygame.draw.polygon(sc, white, ((0,0), (-5,-10), (5, -10)))
-
-
 def drawEdge(n: Node, color: Color):
     src = n
     for k in graph.all_out_edges_of_node(n.id):
@@ -123,20 +108,65 @@ def drawEdge(n: Node, color: Color):
         pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y))
 
 
-while (True):
+def text1(word, x, y):
+    text = FONT.render("{}".format(word), True, white)
+    return screen.blit(text, (x, y))
+
+
+def inpt():
+    word = ""
+    text1("Please enter numbers: ", 300, 400)  # example asking name
+    pygame.display.flip()
+    done = True
+    while done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    word += str(chr(event.key))
+                if event.key == pygame.K_b:
+                    word += chr(event.key)
+                if event.key == pygame.K_c:
+                    word += chr(event.key)
+                if event.key == pygame.K_d:
+                    word += chr(event.key)
+                if event.key == pygame.K_RETURN:
+                    done = False
+                # events...
+    return text1(word, 100, 50)
+
+
+ev = None
+running = True
+while running:
     time_delta = clock.tick(60) / 1000.0
     # check events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            exit(0)
+            running = False
+
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == btnCenter:
                     center = g_algo.centerPoint()[0]
                     node = graph.nodes.get(center)
-                    pygame.draw.line(screen, white, (0,0), (100,100))
-                    drawNode(node, pink)
+
+                if event.ui_element == btnTsp:
+                    for e in pygame.event.get():
+                        if e.type == pygame.KEYDOWN:
+                            if e.key == pygame.K_BACKSPACE:
+                                user_text = user_text[:-1]
+                            else:
+                                user_text += e.unicode
+                    tsp = True
+                    ev = event
+                    print("tsp")
+
+                    # input_box.colliderect()
+                    # w = inpt()
+                    # print(w)
 
         manager.process_events(event)
     manager.update(time_delta)
@@ -145,15 +175,20 @@ while (True):
 
     # screen.fill(gray)
 
-    # plot graph
+    if cen:
+        drawNode(node, pink)
+        cen = False
+        pygame.display.update()
+
+    elif tsp:
+        input_box1.draw(screen)
+        input_box1.handle_event(ev)
+        x = inpt()
+        tsp = False
+
     for n in graph.nodes.values():
         drawNode(n, blue)
         drawEdge(n, Color(21, 239, 246))
-
-    # btnLoad = Button("load", (0, 0), font=20, bg=white)
-    # btnLoad.show()
-    # btnSave = Button("save", (40, 0), font=20, bg=white)
-    # btnSave.show()
 
     pygame.display.update()
 

@@ -4,10 +4,13 @@ import random
 import queue
 import sys
 from typing import List
+import matplotlib.pyplot as plt
 
 from GraphAlgoInterface import GraphAlgoInterface
 from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
+
+"""This abstract class represents algorithms on directed weighted graph."""
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -15,32 +18,42 @@ class GraphAlgo(GraphAlgoInterface):
 
     def __init__(self, g: DiGraph = DiGraph()):
         self.graph = g
+        self.file = ""
 
+    """return: the directed graph on which the algorithm works on."""
     def get_graph(self) -> GraphInterface:
         return self.graph
 
+    """ Loads a graph from a json file.
+        @param: file_name: The path to the json file
+        @return: True if the loading was successful, False o.w."""
     def load_from_json(self, file_name: str) -> bool:
-        self.graph.__init__()
-        with open(file_name, 'r') as file:
-            l = json.load(file)
-            ListNodes = l['Nodes']
-            ListEdges = l['Edges']
-        for n in ListNodes:
-            try:
-                tmp = n['pos'].split(",")
-                x = float(tmp[0])
-                y = float(tmp[1])
-                pos = (x, y, 0.0)
-            except Exception:
-                x = random.uniform(35.19, 35.22)
-                y = random.uniform(32.05, 32.22)
-                pos = (x, y, 0.0)
+        try:
+            self.file = file_name
+            self.graph.__init__()
+            with open(file_name, 'r') as file:
+                l = json.load(file)
+                ListNodes = l['Nodes']
+                ListEdges = l['Edges']
+            for n in ListNodes:
+                try:
+                    tmp = n['pos'].split(",")
+                    x = float(tmp[0])
+                    y = float(tmp[1])
+                    pos = (x, y, 0.0)
+                except Exception:
+                    x = random.uniform(35.19, 35.22)
+                    y = random.uniform(32.05, 32.22)
+                    pos = (x, y, 0.0)
 
-            self.graph.add_node(n['id'], pos)
-        for e in ListEdges:
-            self.graph.add_edge(e['src'], e['dest'], e['w'])
-        return True
+                self.graph.add_node(n['id'], pos)
+            for e in ListEdges:
+                self.graph.add_edge(e['src'], e['dest'], e['w'])
+            return True
+        except:
+            return False
 
+    """return: deep copy of the graph"""
     def copy(self):
         g = DiGraph()
         for n in self.graph.nodes.values():
@@ -50,6 +63,8 @@ class GraphAlgo(GraphAlgoInterface):
                 g.add_edge(n.id, k, w)
         return g
 
+    """:return: graph transpose
+     help function for isConnected()"""
     def transpose(self):
         g = self.copy()
         tmp = g.children
@@ -57,10 +72,15 @@ class GraphAlgo(GraphAlgoInterface):
         g.parents = tmp
         return g
 
+    """ BFS - search on graph
+    https://en.wikipedia.org/wiki/Breadth-first_search
+    :param graph
+    :param nodeId - root node to start bfs
+    :return visited[] - True in the i'th place if visited i node
+     """
     def bfs(self, g: DiGraph, nodeId: int) -> list:
         visited = [False] * (g.v_size())
-        q = []
-        q.append(nodeId)
+        q = [nodeId]
         visited[nodeId] = True
         while q:
             startNode = q.pop(0)
@@ -70,6 +90,11 @@ class GraphAlgo(GraphAlgoInterface):
                     visited[e] = True
         return visited
 
+    """1. BFS on graph
+       2. BFS on Transpose graph.
+       3. if in one of them a V is unvisited --> return False
+       :return True iff graph is strongly connected
+    """
     def isConnected(self) -> bool:
         start = self.graph.nodes[0].id
         visited = self.bfs(self.graph, start)
@@ -82,6 +107,9 @@ class GraphAlgo(GraphAlgoInterface):
                 return False
         return True
 
+    """ restart nodes: father, weight, 
+        
+    """
     def restartNodes(self):
         for n in self.graph.nodes.values():
             n.father = None
@@ -207,4 +235,22 @@ class GraphAlgo(GraphAlgoInterface):
         return minId, minDist
 
     def plot_graph(self) -> None:
-        pass
+        x = []
+        y = []
+        for n in self.graph.nodes.values():
+            src_x = n.pos[0]
+            src_y = n.pos[1]
+            for k in self.graph.all_out_edges_of_node(n.id):
+                dest = self.graph.nodes.get(k)
+                dest_x = dest.pos[0]
+                dest_y = dest.pos[1]
+                plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops=dict(arrowstyle="->"))
+
+            plt.annotate(n.id, (src_x, src_y))
+            x.append(n.pos[0])
+            y.append(n.pos[1])
+
+        plt.title(self.file.title())
+        plt.scatter(x, y, c='red')
+        plt.gca().invert_yaxis()
+        plt.show()
