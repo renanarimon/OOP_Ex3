@@ -298,21 +298,23 @@ class GraphAlgo(GraphAlgoInterface):
     """plot graph with matplotlib"""
 
     def plot_graph(self) -> None:
-        x = []
-        y = []
-        for n in self.graph.nodes.values():
-            src_x = n.pos[0]
-            src_y = n.pos[1]
-            for k in self.graph.all_out_edges_of_node(n.id):
-                dest = self.graph.nodes.get(k)
-                dest_x = dest.pos[0]
-                dest_y = dest.pos[1]
-                plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops=dict(arrowstyle="->"))
+        pass
 
-            plt.annotate(n.id, (src_x, src_y))
-            x.append(n.pos[0])
-            y.append(n.pos[1])
-
-        plt.title(self.file.title())
-        plt.scatter(x, y, c='red')
-        plt.show()
+        # x = []
+        # y = []
+        # for n in self.graph.nodes.values():
+        #     src_x = n.pos[0]
+        #     src_y = n.pos[1]
+        #     for k in self.graph.all_out_edges_of_node(n.id):
+        #         dest = self.graph.nodes.get(k)
+        #         dest_x = dest.pos[0]
+        #         dest_y = dest.pos[1]
+        #         plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops=dict(arrowstyle="->"))
+        #
+        #     plt.annotate(n.id, (src_x, src_y))
+        #     x.append(n.pos[0])
+        #     y.append(n.pos[1])
+        #
+        # plt.title(self.file.title())
+        # plt.scatter(x, y, c='red')
+        # plt.show()
