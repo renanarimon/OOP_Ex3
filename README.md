@@ -18,7 +18,7 @@ main classes:
 - childern : all edges going out
 - perants : all edges inter in
 
-## DiGraphAlgo implements GraphAlgoInterface:
+## GraphAlgo implements GraphAlgoInterface:
 - isConnected(): check if graph is strongly connected.
 - shortestPath(): find shortest path between 2 nodes. (using Dijkstra algorithm) [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 - center(): find center node in graph
@@ -41,7 +41,10 @@ main classes:
   g_algo = GraphAlgo() <br />
   file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
   g_algo.load_from_json(file) <br />
-  and then enter on this graph any algorithm you want to try
+  then run the function "plot_graph" from GraphAlgo- its will ask you about showing the simple graph (like the images above) or Gui with options of runing the algorithms
+  like: TSP, Center, Load, Save and Shortest Path - Enjoy!<br />
+  
+  for example TSP of A1.json from 8 to 2:  
 
   
   
