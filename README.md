@@ -36,25 +36,23 @@ main classes:
   ## After runing chack3() we get the folow plot:<br />
   ![image](https://user-images.githubusercontent.com/77111035/147135807-fc354638-b43b-4371-afe7-c08a3afa133b.png)
   
-  ## How to run the program : 
+  ## TSP of A1.json on cities: [3, 8, 2, 9]:  
+  ![image](https://user-images.githubusercontent.com/77155986/147288789-c974c0a0-b5c9-46d6-b0b6-5db8240db75d.png)
+
+  ## CENTER of A1.json:  
+  ![image](https://user-images.githubusercontent.com/77155986/147288678-c9a78cf6-2f0e-4684-86dd-02725d20f11c.png)
+  
+  ## SHORTEST PATH of A1.json from 5 to 10: 
+  ![image](https://user-images.githubusercontent.com/77155986/147288908-68cfe380-341f-48ec-93cb-ea18c6b6bb20.png)
+
+
+  # How to run the program : 
   in the main.py: go to main and create a AlgoGraph on this way:<br />
   g_algo = GraphAlgo() <br />
   file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
   g_algo.load_from_json(file) <br />
   then run the function "plot_graph" from GraphAlgo- its will ask you about showing the simple graph (like the images above) or Gui with options of runing the algorithms
   like: TSP, Center, Load, Save and Shortest Path - Enjoy!<br />
-  
-  #### example of TSP of A1.json on cities: [3, 8, 2, 9]:  
-  ![image](https://user-images.githubusercontent.com/77155986/147288789-c974c0a0-b5c9-46d6-b0b6-5db8240db75d.png)
-
-  #### example of CENTER of A1.json:  
-  ![image](https://user-images.githubusercontent.com/77155986/147288678-c9a78cf6-2f0e-4684-86dd-02725d20f11c.png)
-  
-  #### example of SHORTEST PATH of A1.json from 5 to 10: 
-  ![image](https://user-images.githubusercontent.com/77155986/147288908-68cfe380-341f-48ec-93cb-ea18c6b6bb20.png)
-
-
-  
 
   
   
