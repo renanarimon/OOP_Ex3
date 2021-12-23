@@ -8,10 +8,10 @@ from src.GraphAlgo import GraphAlgo
 from src.InputBox import InputBox
 
 # init algo & graph
-
-file = '../data/A1.json'
 g_algo = GraphAlgo()
+file = '../data/A1.json'
 g_algo.load_from_json(file)
+graph = g_algo.graph
 
 R = 10
 WIDTH = pygame.display.get_surface().get_width()
@@ -26,7 +26,7 @@ white = Color(255, 255, 255)
 pink = Color(255, 153, 104)
 
 # flag
-action = "clear"
+action = ""
 center = 0
 tsp = []
 ShortestPath = []
@@ -34,19 +34,17 @@ ShortestPath = []
 # init pygame
 pygame.init()
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
-background = pygame.Surface((WIDTH, HEIGHT),depth=32, flags=RESIZABLE)
+background = pygame.Surface((WIDTH, HEIGHT), flags=RESIZABLE)
 background.fill(gray)
 clock = pygame.time.Clock()
 pygame.font.init()
 
+FONT = pygame.font.SysFont('Arial', 20)
 
-FONT = pygame.font.SysFont('Arial', 10)
-
-# buttons
 manager = pygame_gui.UIManager((WIDTH, HEIGHT))
 btnLoad = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (110, 50)),
-                                         text='LOAD',
-                                         manager=manager)
+                                       text='LOAD',
+                                       manager=manager)
 btnCenter = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 0), (110, 50)),
                                          text='CENTER',
                                          manager=manager)
@@ -57,19 +55,18 @@ btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((300, 0)
                                               text='SHORTED PATH',
                                               manager=manager)
 btnClear = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 0), (110, 50)),
-                                              text='CLEAR',
-                                              manager=manager)
+                                        text='CLEAR',
+                                        manager=manager)
 
 
 def scale(data, min_screen, max_screen, min_data, max_data):
     return ((data - min_data) / (max_data - min_data)) * (max_screen - min_screen) + min_screen
 
 
-min_x = float(min(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
-min_y = float(min(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
-max_x = float(max(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
-max_y = float(max(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
-
+min_x = float(min(list(graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
+min_y = float(min(list(graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
+max_x = float(max(list(graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
+max_y = float(max(list(graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
 
 def gui_scale(data, x=False, y=False):
     if x:
@@ -86,7 +83,7 @@ def drawNode(n1: Node, color: Color):
                           R, color)
     gfxdraw.aacircle(screen, int(x), int(y),
                      R, yellow)
-    id_srf = FONT.render(str(n.id), True, gray)
+    id_srf = FONT.render(str(n1.id), True, gray)
     rect = id_srf.get_rect(center=(x, y))
     screen.blit(id_srf, rect)
 
@@ -148,8 +145,6 @@ while running:
 
                 if event.ui_element == btnClear:
                     action = "clear"
-
-
 
         manager.process_events(event)
     manager.update(time_delta)

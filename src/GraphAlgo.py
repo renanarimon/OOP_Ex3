@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from GraphAlgoInterface import GraphAlgoInterface
 from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
-
 """This abstract class represents algorithms on directed weighted graph."""
 
 
@@ -298,7 +297,9 @@ class GraphAlgo(GraphAlgoInterface):
     """plot graph with matplotlib"""
 
     def plot_graph(self) -> None:
-        pass
+        gui_graph = GUI_Graph()
+        gui_graph.runGui()
+
 
         # x = []
         # y = []

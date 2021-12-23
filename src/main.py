@@ -111,13 +111,5 @@ def check3():
 import time
 if __name__ == '__main__':
     algo = GraphAlgo()
-    algo.load_from_json('../data/A1.json')
 
-    city = [8, 2, 3, 5, 9]
-    # for n in algo.graph.nodes.values():
-    #     city.append(n.id)
-    start_time = time.time()
-    print(algo.TSP(city))
-    # print(algo.shortest_path(9,3))
-    print("--- %s seconds ---" % (time.time() - start_time))
-    # check()
+    algo.plot_graph()
