@@ -43,19 +43,19 @@ pygame.font.init()
 FONT = pygame.font.SysFont('Arial', 20)
 
 manager = pygame_gui.UIManager((WIDTH, HEIGHT))
-btnLoad = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (110, 50)),
+btnLoad = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (115, 40)),
                                        text='LOAD',
                                        manager=manager)
-btnCenter = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 0), (110, 50)),
+btnCenter = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((115, 0), (115, 40)),
                                          text='CENTER',
                                          manager=manager)
-btnTsp = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((200, 0), (110, 50)),
+btnTsp = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((230, 0), (115, 40)),
                                       text='TSP',
                                       manager=manager)
-btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((300, 0), (110, 50)),
-                                              text='SHORTED PATH',
+btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 0), (115, 40)),
+                                              text='SHORTEST PATH',
                                               manager=manager)
-btnClear = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 0), (110, 50)),
+btnClear = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((460, 0), (115, 40)),
                                         text='CLEAR',
                                         manager=manager)
 
@@ -127,9 +127,7 @@ while running:
                     title = "TSP"
                     output = easygui.enterbox(text, title)
                     listOutput = output.split(" ")
-
-                    for i in range(len(listOutput)):
-                        listOutput[i] = int(listOutput[i])
+                    listOutput = [int(x) for x in listOutput]
                     tsp = g_algo.TSP(listOutput)[0]
 
                 if event.ui_element == btnShortedPath:

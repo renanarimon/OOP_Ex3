@@ -6,6 +6,13 @@ import sys
 from typing import List
 import matplotlib.pyplot as plt
 
+import pygame
+from pygame import Color, display, gfxdraw
+from pygame.constants import RESIZABLE
+import pygame_gui
+from src.DiGraph import Node
+
+
 from GraphAlgoInterface import GraphAlgoInterface
 from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
@@ -298,6 +305,90 @@ class GraphAlgo(GraphAlgoInterface):
 
     def plot_graph(self) -> None:
         pass
+        # running = True
+        # while running:
+        #     time_delta = GUI_graph.clock.tick(60) / 1000.0
+        #
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             running = False
+        #
+        #         if event.type == pygame.USEREVENT:
+        #             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+        #                 if event.ui_element == GUI_graph.btnLoad:
+        #                     msg = "Please select a json file: "
+        #                     file = GUI_graph.easygui.fileopenbox(msg, '')
+        #                     GUI_graph.g_algo.load_from_json(file)
+        #                     action = "clear"
+        #                 if event.ui_element == GUI_graph.btnCenter:
+        #                     center = GUI_graph.g_algo.centerPoint()[0]
+        #                     action = "center"
+        #                 if event.ui_element == GUI_graph.btnTsp:
+        #                     action = "tsp"
+        #                     text = "Enter keys Of Cities: (Example:1 2 3 4)"
+        #                     title = "TSP"
+        #                     output = GUI_graph.easygui.enterbox(text, title)
+        #                     listOutput = output.split(" ")
+        #
+        #                     for i in range(len(listOutput)):
+        #                         listOutput[i] = int(listOutput[i])
+        #                     tsp = GUI_graph.g_algo.TSP(listOutput)[0]
+        #
+        #                 if event.ui_element == GUI_graph.btnShortedPath:
+        #                     action = "ShortestPath"
+        #                     text = "Enter keys Of src & dest:"
+        #                     title = "Shortest Path"
+        #                     output = GUI_graph.easygui.enterbox(text, title)
+        #                     listOutput = output.split(" ")
+        #                     src1 = int(listOutput[0])
+        #                     dest1 = int(listOutput[1])
+        #                     print(src1, dest1)
+        #                     ShortestPath = GUI_graph.g_algo.shortest_path(src1, dest1)[1]
+        #                     print(ShortestPath)
+        #
+        #                 if event.ui_element == GUI_graph.btnClear:
+        #                     action = "clear"
+        #
+        #         GUI_graph.manager.process_events(event)
+        #     GUI_graph.manager.update(time_delta)
+        #     GUI_graph.screen.blit(GUI_graph.background, (0, 0))
+        #     GUI_graph.manager.draw_ui(GUI_graph.screen)
+        #
+        #     for n in GUI_graph.g_algo.graph.nodes.values():
+        #         GUI_graph.drawEdges(n, GUI_graph.blue1)
+        #
+        #     for n in GUI_graph.g_algo.graph.nodes.values():
+        #         GUI_graph.drawNode(n, GUI_graph.blue)
+        #
+        #     if GUI_graph.action == "clear":
+        #         for n in GUI_graph.g_algo.graph.nodes.values():
+        #             GUI_graph.drawEdges(n, GUI_graph.blue1)
+        #
+        #         for n in GUI_graph.g_algo.graph.nodes.values():
+        #             GUI_graph.drawNode(n, GUI_graph.blue)
+        #
+        #     if GUI_graph.action == "center":
+        #         n = GUI_graph.g_algo.graph.nodes.get(GUI_graph.center)
+        #         GUI_graph.drawNode(n, GUI_graph.pink)
+        #         pygame.display.flip()
+        #
+        #     if GUI_graph.action == "tsp":
+        #         for i in range(len(GUI_graph.tsp) - 1):
+        #             src = GUI_graph.g_algo.graph.nodes.get(tsp[i])
+        #             dest = GUI_graph.g_algo.graph.nodes.get(tsp[i + 1])
+        #             GUI_graph.drawOneEdge(src, dest, GUI_graph.pink)
+        #         pygame.display.flip()
+        #
+        #     if GUI_graph.action == "ShortestPath":
+        #         for i in range(len(GUI_graph.ShortestPath) - 1):
+        #             src = GUI_graph.g_algo.graph.nodes.get(GUI_graph.ShortestPath[i])
+        #             dest = GUI_graph.g_algo.graph.nodes.get(GUI_graph.ShortestPath[i + 1])
+        #             GUI_graph.drawOneEdge(src, dest, GUI_graph.pink)
+        #         pygame.display.flip()
+        #
+        #     pygame.display.update()
+        #
+        #     GUI_graph.clock.tick(60)
 
 
         # x = []
