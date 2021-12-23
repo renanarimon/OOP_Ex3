@@ -297,8 +297,7 @@ class GraphAlgo(GraphAlgoInterface):
     """plot graph with matplotlib"""
 
     def plot_graph(self) -> None:
-        gui_graph = GUI_Graph()
-        gui_graph.runGui()
+        pass
 
 
         # x = []

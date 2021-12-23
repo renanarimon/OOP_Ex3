@@ -16,6 +16,7 @@ graph = g_algo.graph
 R = 10
 WIDTH = pygame.display.get_surface().get_width()
 HEIGHT = pygame.display.get_surface().get_height()
+
 # colors
 gray = Color(64, 64, 64)
 blue = Color(6, 187, 193)
