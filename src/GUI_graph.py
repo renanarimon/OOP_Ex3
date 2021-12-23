@@ -8,8 +8,9 @@ from src.GraphAlgo import GraphAlgo
 from src.InputBox import InputBox
 
 # init algo & graph
-g_algo = GraphAlgo()
+
 file = '../data/A1.json'
+g_algo = GraphAlgo()
 g_algo.load_from_json(file)
 graph = g_algo.graph
 
@@ -25,7 +26,7 @@ white = Color(255, 255, 255)
 pink = Color(255, 153, 104)
 
 # flag
-action = ""
+action = "clear"
 center = 0
 tsp = []
 ShortestPath = []
@@ -42,14 +43,20 @@ FONT = pygame.font.SysFont('Arial', 20)
 
 # buttons
 manager = pygame_gui.UIManager((WIDTH, HEIGHT))
-btnCenter = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (110, 50)),
+btnLoad = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (110, 50)),
+                                         text='LOAD',
+                                         manager=manager)
+btnCenter = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 0), (110, 50)),
                                          text='CENTER',
                                          manager=manager)
-btnTsp = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 0), (110, 50)),
+btnTsp = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((200, 0), (110, 50)),
                                       text='TSP',
                                       manager=manager)
-btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((200, 0), (110, 50)),
+btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((300, 0), (110, 50)),
                                               text='SHORTED PATH',
+                                              manager=manager)
+btnClear = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 0), (110, 50)),
+                                              text='CLEAR',
                                               manager=manager)
 
 
@@ -107,6 +114,11 @@ while running:
 
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == btnLoad:
+                    msg = "Please select the folder: "
+                    title = "Folder to load..."
+                    file = easygui.fileopenbox(msg, title, '')
+                    action = "load"
                 if event.ui_element == btnCenter:
                     center = g_algo.centerPoint()[0]
                     action = "center"
@@ -133,17 +145,34 @@ while running:
                     ShortestPath = g_algo.shortest_path(src1, dest1)[1]
                     print(ShortestPath)
 
+                if event.ui_element == btnClear:
+                    action = "clear"
+
+
+
         manager.process_events(event)
     manager.update(time_delta)
     screen.blit(background, (0, 0))
     manager.draw_ui(screen)
 
-    # screen.fill(gray)
     for n in graph.nodes.values():
         drawEdges(n, blue1)
 
     for n in graph.nodes.values():
         drawNode(n, blue)
+    # screen.fill(gray)
+    if action == "clear":
+        for n in graph.nodes.values():
+            drawEdges(n, blue1)
+
+        for n in graph.nodes.values():
+            drawNode(n, blue)
+
+    if action == "load":
+        g_algo.load_from_json(file)
+        graph = g_algo.graph
+
+        pygame.display.flip()
 
     if action == "center":
         n = graph.nodes.get(center)
@@ -153,18 +182,17 @@ while running:
     if action == "tsp":
         for i in range(len(tsp) - 1):
             src = graph.nodes.get(tsp[i])
-            dest = graph.nodes.get(tsp[i+1])
+            dest = graph.nodes.get(tsp[i + 1])
             drawOneEdge(src, dest, pink)
         pygame.display.flip()
 
     if action == "ShortestPath":
         for i in range(len(ShortestPath) - 1):
             src = graph.nodes.get(ShortestPath[i])
-            dest = graph.nodes.get(ShortestPath[i+1])
+            dest = graph.nodes.get(ShortestPath[i + 1])
             # print(src, dest)
             drawOneEdge(src, dest, pink)
         pygame.display.flip()
-
 
     pygame.display.update()
 

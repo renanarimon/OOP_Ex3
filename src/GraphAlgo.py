@@ -193,7 +193,7 @@ class GraphAlgo(GraphAlgoInterface):
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         ans = []
         currNode = node_lst.pop(0)
-        ans.append(0)
+        ans.append(currNode)
         bestNode = 0
         weight = 0
         while len(node_lst) > 0:
