@@ -12,10 +12,10 @@ from src.InputBox import InputBox
 file = '../data/A1.json'
 g_algo = GraphAlgo()
 g_algo.load_from_json(file)
-graph = g_algo.graph
 
-R, WIDTH, HEIGHT = 15, 1080, 720
-
+R = 10
+WIDTH = pygame.display.get_surface().get_width()
+HEIGHT = pygame.display.get_surface().get_height()
 # colors
 gray = Color(64, 64, 64)
 blue = Color(6, 187, 193)
@@ -34,12 +34,13 @@ ShortestPath = []
 # init pygame
 pygame.init()
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
-background = pygame.Surface((WIDTH, HEIGHT), flags=RESIZABLE)
+background = pygame.Surface((WIDTH, HEIGHT),depth=32, flags=RESIZABLE)
 background.fill(gray)
 clock = pygame.time.Clock()
 pygame.font.init()
 
-FONT = pygame.font.SysFont('Arial', 20)
+
+FONT = pygame.font.SysFont('Arial', 10)
 
 # buttons
 manager = pygame_gui.UIManager((WIDTH, HEIGHT))
@@ -64,10 +65,10 @@ def scale(data, min_screen, max_screen, min_data, max_data):
     return ((data - min_data) / (max_data - min_data)) * (max_screen - min_screen) + min_screen
 
 
-min_x = float(min(list(graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
-min_y = float(min(list(graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
-max_x = float(max(list(graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
-max_y = float(max(list(graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
+min_x = float(min(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
+min_y = float(min(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
+max_x = float(max(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
+max_y = float(max(list(g_algo.graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
 
 
 def gui_scale(data, x=False, y=False):
@@ -85,7 +86,7 @@ def drawNode(n1: Node, color: Color):
                           R, color)
     gfxdraw.aacircle(screen, int(x), int(y),
                      R, yellow)
-    id_srf = FONT.render(str(n.id), True, yellow)
+    id_srf = FONT.render(str(n.id), True, gray)
     rect = id_srf.get_rect(center=(x, y))
     screen.blit(id_srf, rect)
 
@@ -95,12 +96,12 @@ def drawOneEdge(src: Node, dest: Node, color: Color):
     src_y = gui_scale(src.pos[1], y=True)
     dest_x = gui_scale(dest.pos[0], x=True)
     dest_y = gui_scale(dest.pos[1], y=True)
-    pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y))
+    pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y), width=2)
 
 
 def drawEdges(n: Node, color: Color):
-    for k in graph.all_out_edges_of_node(n.id):
-        dest = graph.nodes.get(k)
+    for k in g_algo.graph.all_out_edges_of_node(n.id):
+        dest = g_algo.graph.nodes.get(k)
         drawOneEdge(n, dest, color)
 
 
@@ -115,10 +116,10 @@ while running:
         if event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == btnLoad:
-                    msg = "Please select the folder: "
-                    title = "Folder to load..."
-                    file = easygui.fileopenbox(msg, title, '')
-                    action = "load"
+                    msg = "Please select a json file: "
+                    file = easygui.fileopenbox(msg, '')
+                    g_algo.load_from_json(file)
+                    action = "clear"
                 if event.ui_element == btnCenter:
                     center = g_algo.centerPoint()[0]
                     action = "center"
@@ -155,42 +156,35 @@ while running:
     screen.blit(background, (0, 0))
     manager.draw_ui(screen)
 
-    for n in graph.nodes.values():
+    for n in g_algo.graph.nodes.values():
         drawEdges(n, blue1)
 
-    for n in graph.nodes.values():
+    for n in g_algo.graph.nodes.values():
         drawNode(n, blue)
-    # screen.fill(gray)
+
     if action == "clear":
-        for n in graph.nodes.values():
+        for n in g_algo.graph.nodes.values():
             drawEdges(n, blue1)
 
-        for n in graph.nodes.values():
+        for n in g_algo.graph.nodes.values():
             drawNode(n, blue)
 
-    if action == "load":
-        g_algo.load_from_json(file)
-        graph = g_algo.graph
-
-        pygame.display.flip()
-
     if action == "center":
-        n = graph.nodes.get(center)
+        n = g_algo.graph.nodes.get(center)
         drawNode(n, pink)
         pygame.display.flip()
 
     if action == "tsp":
         for i in range(len(tsp) - 1):
-            src = graph.nodes.get(tsp[i])
-            dest = graph.nodes.get(tsp[i + 1])
+            src = g_algo.graph.nodes.get(tsp[i])
+            dest = g_algo.graph.nodes.get(tsp[i + 1])
             drawOneEdge(src, dest, pink)
         pygame.display.flip()
 
     if action == "ShortestPath":
         for i in range(len(ShortestPath) - 1):
-            src = graph.nodes.get(ShortestPath[i])
-            dest = graph.nodes.get(ShortestPath[i + 1])
-            # print(src, dest)
+            src = g_algo.graph.nodes.get(ShortestPath[i])
+            dest = g_algo.graph.nodes.get(ShortestPath[i + 1])
             drawOneEdge(src, dest, pink)
         pygame.display.flip()
 
