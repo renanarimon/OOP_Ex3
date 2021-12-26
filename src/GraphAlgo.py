@@ -6,25 +6,30 @@ import sys
 from typing import List
 import matplotlib.pyplot as plt
 
+import easygui
 import pygame
 from pygame import Color, display, gfxdraw
 from pygame.constants import RESIZABLE
 import pygame_gui
 from src.DiGraph import Node
 
-
 from GraphAlgoInterface import GraphAlgoInterface
 from src.DiGraph import DiGraph
 from src.GraphInterface import GraphInterface
+
 """This abstract class represents algorithms on directed weighted graph."""
 
 
 class GraphAlgo(GraphAlgoInterface):
-    INFINITY = math.inf
 
     def __init__(self, g: DiGraph = DiGraph()):
         self.graph = g
         self.file = ""
+
+        # flag
+
+    INFINITY = math.inf
+    # init algo & graph
 
     """return: the directed graph on which the algorithm works on."""
 
@@ -304,108 +309,202 @@ class GraphAlgo(GraphAlgoInterface):
     """plot graph with matplotlib"""
 
     def plot_graph(self) -> None:
-        pass
-        # running = True
-        # while running:
-        #     time_delta = GUI_graph.clock.tick(60) / 1000.0
-        #
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             running = False
-        #
-        #         if event.type == pygame.USEREVENT:
-        #             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-        #                 if event.ui_element == GUI_graph.btnLoad:
-        #                     msg = "Please select a json file: "
-        #                     file = GUI_graph.easygui.fileopenbox(msg, '')
-        #                     GUI_graph.g_algo.load_from_json(file)
-        #                     action = "clear"
-        #                 if event.ui_element == GUI_graph.btnCenter:
-        #                     center = GUI_graph.g_algo.centerPoint()[0]
-        #                     action = "center"
-        #                 if event.ui_element == GUI_graph.btnTsp:
-        #                     action = "tsp"
-        #                     text = "Enter keys Of Cities: (Example:1 2 3 4)"
-        #                     title = "TSP"
-        #                     output = GUI_graph.easygui.enterbox(text, title)
-        #                     listOutput = output.split(" ")
-        #
-        #                     for i in range(len(listOutput)):
-        #                         listOutput[i] = int(listOutput[i])
-        #                     tsp = GUI_graph.g_algo.TSP(listOutput)[0]
-        #
-        #                 if event.ui_element == GUI_graph.btnShortedPath:
-        #                     action = "ShortestPath"
-        #                     text = "Enter keys Of src & dest:"
-        #                     title = "Shortest Path"
-        #                     output = GUI_graph.easygui.enterbox(text, title)
-        #                     listOutput = output.split(" ")
-        #                     src1 = int(listOutput[0])
-        #                     dest1 = int(listOutput[1])
-        #                     print(src1, dest1)
-        #                     ShortestPath = GUI_graph.g_algo.shortest_path(src1, dest1)[1]
-        #                     print(ShortestPath)
-        #
-        #                 if event.ui_element == GUI_graph.btnClear:
-        #                     action = "clear"
-        #
-        #         GUI_graph.manager.process_events(event)
-        #     GUI_graph.manager.update(time_delta)
-        #     GUI_graph.screen.blit(GUI_graph.background, (0, 0))
-        #     GUI_graph.manager.draw_ui(GUI_graph.screen)
-        #
-        #     for n in GUI_graph.g_algo.graph.nodes.values():
-        #         GUI_graph.drawEdges(n, GUI_graph.blue1)
-        #
-        #     for n in GUI_graph.g_algo.graph.nodes.values():
-        #         GUI_graph.drawNode(n, GUI_graph.blue)
-        #
-        #     if GUI_graph.action == "clear":
-        #         for n in GUI_graph.g_algo.graph.nodes.values():
-        #             GUI_graph.drawEdges(n, GUI_graph.blue1)
-        #
-        #         for n in GUI_graph.g_algo.graph.nodes.values():
-        #             GUI_graph.drawNode(n, GUI_graph.blue)
-        #
-        #     if GUI_graph.action == "center":
-        #         n = GUI_graph.g_algo.graph.nodes.get(GUI_graph.center)
-        #         GUI_graph.drawNode(n, GUI_graph.pink)
-        #         pygame.display.flip()
-        #
-        #     if GUI_graph.action == "tsp":
-        #         for i in range(len(GUI_graph.tsp) - 1):
-        #             src = GUI_graph.g_algo.graph.nodes.get(tsp[i])
-        #             dest = GUI_graph.g_algo.graph.nodes.get(tsp[i + 1])
-        #             GUI_graph.drawOneEdge(src, dest, GUI_graph.pink)
-        #         pygame.display.flip()
-        #
-        #     if GUI_graph.action == "ShortestPath":
-        #         for i in range(len(GUI_graph.ShortestPath) - 1):
-        #             src = GUI_graph.g_algo.graph.nodes.get(GUI_graph.ShortestPath[i])
-        #             dest = GUI_graph.g_algo.graph.nodes.get(GUI_graph.ShortestPath[i + 1])
-        #             GUI_graph.drawOneEdge(src, dest, GUI_graph.pink)
-        #         pygame.display.flip()
-        #
-        #     pygame.display.update()
-        #
-        #     GUI_graph.clock.tick(60)
+        action = ""
+        center = 0
+        tsp = []
+        ShortestPath = []
+        g_algo = GraphAlgo()
+        file = '../data/A1.json'
+        g_algo.load_from_json(file)
+        graph = g_algo.graph
+
+        R = 10
+        WIDTH = 700
+        HEIGHT = 500
+
+        # colors
+        gray = Color(64, 64, 64)
+        blue = Color(6, 187, 193)
+        blue1 = Color(21, 239, 246)
+        yellow = Color(255, 255, 102)
+        black = Color(0, 0, 0)
+        white = Color(255, 255, 255)
+        pink = Color(255, 153, 104)
+
+        # # flag
+        # action = ""
+        # center = 0
+        # tsp = []
+        # ShortestPath = []
+
+        # init pygame
+        pygame.init()
+        screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
+        background = pygame.Surface((WIDTH, HEIGHT), flags=RESIZABLE)
+        background.fill(gray)
+        clock = pygame.time.Clock()
+        pygame.font.init()
+
+        FONT = pygame.font.SysFont('Arial', 20)
+
+        manager = pygame_gui.UIManager((WIDTH, HEIGHT))
+        btnLoad = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (115, 40)),
+                                               text='LOAD',
+                                               manager=manager)
+        btnCenter = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((115, 0), (115, 40)),
+                                                 text='CENTER',
+                                                 manager=manager)
+        btnTsp = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((230, 0), (115, 40)),
+                                              text='TSP',
+                                              manager=manager)
+        btnShortedPath = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 0), (115, 40)),
+                                                      text='SHORTEST PATH',
+                                                      manager=manager)
+        btnClear = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((460, 0), (115, 40)),
+                                                text='CLEAR',
+                                                manager=manager)
+
+        def scale(data, min_screen, max_screen, min_data, max_data):
+            return ((data - min_data) / (max_data - min_data)) * (max_screen - min_screen) + min_screen
+
+        min_x = float(min(list(graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
+        min_y = float(min(list(graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
+        max_x = float(max(list(graph.nodes.values()), key=lambda node: node.pos[0]).pos[0])
+        max_y = float(max(list(graph.nodes.values()), key=lambda node: node.pos[1]).pos[1])
+
+        def gui_scale(data, x=False, y=False):
+            if x:
+                return scale(data, 50, screen.get_width() - 50, min_x, max_x)
+            if y:
+                return scale(data, 50, screen.get_height() - 50, min_y, max_y)
+
+        # draw
+        def drawNode(n1: Node, color: Color):
+            x = gui_scale(float(n1.pos[0]), x=True)
+            y = gui_scale(float(n1.pos[1]), y=True)
+            gfxdraw.filled_circle(screen, int(x), int(y),
+                                  R, color)
+            gfxdraw.aacircle(screen, int(x), int(y),
+                             R, yellow)
+            id_srf = FONT.render(str(n1.id), True, gray)
+            rect = id_srf.get_rect(center=(x, y))
+            screen.blit(id_srf, rect)
+
+        def drawOneEdge(src: Node, dest: Node, color: Color):
+            src_x = gui_scale(src.pos[0], x=True)
+            src_y = gui_scale(src.pos[1], y=True)
+            dest_x = gui_scale(dest.pos[0], x=True)
+            dest_y = gui_scale(dest.pos[1], y=True)
+            pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y), width=2)
+
+        def drawEdges(n: Node, color: Color):
+            for k in g_algo.graph.all_out_edges_of_node(n.id):
+                dest = g_algo.graph.nodes.get(k)
+                drawOneEdge(n, dest, color)
+
+        def simplePlot():
+            x = []
+            y = []
+            for n in self.graph.nodes.values():
+                src_x = n.pos[0]
+                src_y = n.pos[1]
+                for k in self.graph.all_out_edges_of_node(n.id):
+                    dest = self.graph.nodes.get(k)
+                    dest_x = dest.pos[0]
+                    dest_y = dest.pos[1]
+                    plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops=dict(arrowstyle="->"))
+
+                plt.annotate(n.id, (src_x, src_y))
+                x.append(n.pos[0])
+                y.append(n.pos[1])
+
+            plt.title(self.file.title())
+            plt.scatter(x, y, c='red')
+            plt.show()
+
+        easygui.boolbox("simple plot or gui?", )
+
+        running = True
+        while running:
+            time_delta = clock.tick(60) / 1000.0
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+                if event.type == pygame.USEREVENT:
+                    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                        if event.ui_element == btnLoad:
+                            msg = "Please select a json file: "
+                            file = easygui.fileopenbox(msg, '')
+                            g_algo.load_from_json(file)
+                            action = "clear"
+                        if event.ui_element == btnCenter:
+                            center = g_algo.centerPoint()[0]
+                            action = "center"
+                        if event.ui_element == btnTsp:
+                            action = "tsp"
+                            text = "Enter keys Of Cities: (Example:1 2 3 4)"
+                            title = "TSP"
+                            output = easygui.enterbox(text, title)
+                            listOutput = output.split(" ")
+                            listOutput = [int(x) for x in listOutput]
+                            tsp = g_algo.TSP(listOutput)[0]
+
+                        if event.ui_element == btnShortedPath:
+                            action = "ShortestPath"
+                            text = "Enter keys Of src & dest:"
+                            title = "Shortest Path"
+                            output = easygui.enterbox(text, title)
+                            listOutput = output.split(" ")
+                            src1 = int(listOutput[0])
+                            dest1 = int(listOutput[1])
+                            print(src1, dest1)
+                            ShortestPath = g_algo.shortest_path(src1, dest1)[1]
+                            print(ShortestPath)
+
+                        if event.ui_element == btnClear:
+                            action = "clear"
+
+                manager.process_events(event)
+            manager.update(time_delta)
+            screen.blit(background, (0, 0))
+            manager.draw_ui(screen)
+
+            for n in g_algo.graph.nodes.values():
+                drawEdges(n, blue1)
+
+            for n in g_algo.graph.nodes.values():
+                drawNode(n, blue)
+
+            if action == "clear":
+                for n in g_algo.graph.nodes.values():
+                    drawEdges(n, blue1)
+
+                for n in g_algo.graph.nodes.values():
+                    drawNode(n, blue)
+
+            if action == "center":
+                n = g_algo.graph.nodes.get(center)
+                drawNode(n, pink)
+                pygame.display.flip()
+
+            if action == "tsp":
+                for i in range(len(tsp) - 1):
+                    src = g_algo.graph.nodes.get(tsp[i])
+                    dest = g_algo.graph.nodes.get(tsp[i + 1])
+                    drawOneEdge(src, dest, pink)
+                pygame.display.flip()
+
+            if action == "ShortestPath":
+                for i in range(len(ShortestPath) - 1):
+                    src = g_algo.graph.nodes.get(ShortestPath[i])
+                    dest = g_algo.graph.nodes.get(ShortestPath[i + 1])
+                    drawOneEdge(src, dest, pink)
+                pygame.display.flip()
+
+            pygame.display.update()
+
+            clock.tick(60)
 
 
-        # x = []
-        # y = []
-        # for n in self.graph.nodes.values():
-        #     src_x = n.pos[0]
-        #     src_y = n.pos[1]
-        #     for k in self.graph.all_out_edges_of_node(n.id):
-        #         dest = self.graph.nodes.get(k)
-        #         dest_x = dest.pos[0]
-        #         dest_y = dest.pos[1]
-        #         plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops=dict(arrowstyle="->"))
-        #
-        #     plt.annotate(n.id, (src_x, src_y))
-        #     x.append(n.pos[0])
-        #     y.append(n.pos[1])
-        #
-        # plt.title(self.file.title())
-        # plt.scatter(x, y, c='red')
-        # plt.show()
