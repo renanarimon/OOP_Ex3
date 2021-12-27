@@ -191,9 +191,10 @@ class GraphAlgo(GraphAlgoInterface):
         weightAns = self.graph.nodes[id2].weight
         listAns = []
         curr = id2
-        listAns, weightAns = self.findParentPath(curr, weightAns, listAns)
-        listAns.append(id1)
-        listAns.reverse()
+        listAns, weight = self.findParentPath(curr, weightAns, listAns)
+        if weightAns != math.inf:
+            listAns.append(id1)
+            listAns.reverse()
         return weightAns, listAns
 
     """ Computes a list of consecutive nodes which go over all the nodes in cities.
@@ -313,10 +314,7 @@ class GraphAlgo(GraphAlgoInterface):
         center = 0
         tsp = []
         ShortestPath = []
-        g_algo = GraphAlgo()
-        file = '../data/A1.json'
-        g_algo.load_from_json(file)
-        graph = g_algo.graph
+        graph = self.graph
 
         R = 10
         WIDTH = 700
@@ -327,15 +325,8 @@ class GraphAlgo(GraphAlgoInterface):
         blue = Color(6, 187, 193)
         blue1 = Color(21, 239, 246)
         yellow = Color(255, 255, 102)
-        black = Color(0, 0, 0)
         white = Color(255, 255, 255)
         pink = Color(255, 153, 104)
-
-        # # flag
-        # action = ""
-        # center = 0
-        # tsp = []
-        # ShortestPath = []
 
         # init pygame
         pygame.init()
@@ -378,6 +369,26 @@ class GraphAlgo(GraphAlgoInterface):
             if y:
                 return scale(data, 50, screen.get_height() - 50, min_y, max_y)
 
+        def draw_arrow(src, dst, d, hi, color):
+            dx = float(dst[0]) - float(src[0])
+            dy = float(dst[1]) - float(src[1])
+            s = float(math.sqrt(dx * dx + dy * dy))
+            x1 = float(s - d)
+            x2 = float(x1)
+            y1 = float(hi)
+            y2 = hi * -1
+            sin = dy / s
+            cos = dx / s
+            x_temp = x1 * cos - y1 * sin + float(src[0])
+            y1 = x1 * sin + y1 * cos + float(src[1])
+            x1 = x_temp
+            x_temp = x2 * cos - y2 * sin + float(src[0])
+            y2 = x2 * sin + y2 * cos + float(src[1])
+            x2 = x_temp
+            points = [(dst[0], dst[1]), (int(x1), int(y1)), (int(x2), int(y2))]
+            pygame.draw.line(screen, color, src, dst, width=2)
+            pygame.draw.polygon(screen, color, points)
+
         # draw
         def drawNode(n1: Node, color: Color):
             x = gui_scale(float(n1.pos[0]), x=True)
@@ -395,11 +406,12 @@ class GraphAlgo(GraphAlgoInterface):
             src_y = gui_scale(src.pos[1], y=True)
             dest_x = gui_scale(dest.pos[0], x=True)
             dest_y = gui_scale(dest.pos[1], y=True)
-            pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y), width=2)
+            draw_arrow((src_x, src_y), (dest_x, dest_y), 15, 5, white)
+            # pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y), width=2)
 
         def drawEdges(n: Node, color: Color):
-            for k in g_algo.graph.all_out_edges_of_node(n.id):
-                dest = g_algo.graph.nodes.get(k)
+            for k in self.graph.all_out_edges_of_node(n.id):
+                dest = self.graph.nodes.get(k)
                 drawOneEdge(n, dest, color)
 
         def simplePlot():
@@ -422,8 +434,6 @@ class GraphAlgo(GraphAlgoInterface):
             plt.scatter(x, y, c='red')
             plt.show()
 
-        easygui.boolbox("simple plot or gui?", )
-
         running = True
         while running:
             time_delta = clock.tick(60) / 1000.0
@@ -437,10 +447,10 @@ class GraphAlgo(GraphAlgoInterface):
                         if event.ui_element == btnLoad:
                             msg = "Please select a json file: "
                             file = easygui.fileopenbox(msg, '')
-                            g_algo.load_from_json(file)
+                            self.load_from_json(file)
                             action = "clear"
                         if event.ui_element == btnCenter:
-                            center = g_algo.centerPoint()[0]
+                            center = self.centerPoint()[0]
                             action = "center"
                         if event.ui_element == btnTsp:
                             action = "tsp"
@@ -449,7 +459,7 @@ class GraphAlgo(GraphAlgoInterface):
                             output = easygui.enterbox(text, title)
                             listOutput = output.split(" ")
                             listOutput = [int(x) for x in listOutput]
-                            tsp = g_algo.TSP(listOutput)[0]
+                            tsp = self.TSP(listOutput)[0]
 
                         if event.ui_element == btnShortedPath:
                             action = "ShortestPath"
@@ -459,9 +469,7 @@ class GraphAlgo(GraphAlgoInterface):
                             listOutput = output.split(" ")
                             src1 = int(listOutput[0])
                             dest1 = int(listOutput[1])
-                            print(src1, dest1)
-                            ShortestPath = g_algo.shortest_path(src1, dest1)[1]
-                            print(ShortestPath)
+                            ShortestPath = self.shortest_path(src1, dest1)[1]
 
                         if event.ui_element == btnClear:
                             action = "clear"
@@ -471,40 +479,38 @@ class GraphAlgo(GraphAlgoInterface):
             screen.blit(background, (0, 0))
             manager.draw_ui(screen)
 
-            for n in g_algo.graph.nodes.values():
+            for n in self.graph.nodes.values():
                 drawEdges(n, blue1)
 
-            for n in g_algo.graph.nodes.values():
+            for n in self.graph.nodes.values():
                 drawNode(n, blue)
 
             if action == "clear":
-                for n in g_algo.graph.nodes.values():
+                for n in self.graph.nodes.values():
                     drawEdges(n, blue1)
 
-                for n in g_algo.graph.nodes.values():
+                for n in self.graph.nodes.values():
                     drawNode(n, blue)
 
             if action == "center":
-                n = g_algo.graph.nodes.get(center)
+                n = self.graph.nodes.get(center)
                 drawNode(n, pink)
                 pygame.display.flip()
 
             if action == "tsp":
                 for i in range(len(tsp) - 1):
-                    src = g_algo.graph.nodes.get(tsp[i])
-                    dest = g_algo.graph.nodes.get(tsp[i + 1])
+                    src = self.graph.nodes.get(tsp[i])
+                    dest = self.graph.nodes.get(tsp[i + 1])
                     drawOneEdge(src, dest, pink)
                 pygame.display.flip()
 
             if action == "ShortestPath":
                 for i in range(len(ShortestPath) - 1):
-                    src = g_algo.graph.nodes.get(ShortestPath[i])
-                    dest = g_algo.graph.nodes.get(ShortestPath[i + 1])
+                    src = self.graph.nodes.get(ShortestPath[i])
+                    dest = self.graph.nodes.get(ShortestPath[i + 1])
                     drawOneEdge(src, dest, pink)
                 pygame.display.flip()
 
             pygame.display.update()
 
             clock.tick(60)
-
-

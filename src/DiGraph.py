@@ -24,30 +24,35 @@ class DiGraph(GraphInterface):
     """
    @return: The number of vertices in this graph
     """
+
     def v_size(self) -> int:
         return len(self.nodes)
 
     """
     @return: The number of edges in this graph
     """
+
     def e_size(self) -> int:
         return self.edgesAmount
 
     """return a dictionary of all the nodes in the Graph, 
         each node is represented using a pair (node_id, Node)
     """
+
     def get_all_v(self) -> dict:
         return self.nodes
 
     """return a dictionary of all the nodes connected to (into) node_id ,
     each node is represented using a pair (other_node_id, weight)
      """
+
     def all_in_edges_of_node(self, id1: int) -> dict:
         return self.parents[id1]
 
     """return a dictionary of all the nodes connected from node_id , 
     each node is represented using a pair (other_node_id, weight)
     """
+
     def all_out_edges_of_node(self, id1: int) -> dict:
         return self.children[id1]
 
@@ -56,6 +61,7 @@ class DiGraph(GraphInterface):
     on every change in the graph state - the MC should be increased
     @return: The current version of this graph.
     """
+
     def get_mc(self) -> int:
         return self.MC
 
@@ -67,6 +73,7 @@ class DiGraph(GraphInterface):
     @return: True if the edge was added successfully, False o.w.
     Note: If the edge already exists or one of the nodes dose not exists the functions will do nothing
     """
+
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
         if self.nodes.get(id1) is not None and self.nodes.get(id2) is not None:
             if self.children[id1].get(id2) is not None:
@@ -79,7 +86,6 @@ class DiGraph(GraphInterface):
         else:
             return False
 
-
     """
     Adds a node to the graph.
     @param node_id: The node ID
@@ -87,6 +93,7 @@ class DiGraph(GraphInterface):
     @return: True if the node was added successfully, False o.w.
     Note: if the node id already exists the node will not be added
     """
+
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
         if node_id not in self.nodes:
             if pos is None:
@@ -108,6 +115,7 @@ class DiGraph(GraphInterface):
     @return: True if the node was removed successfully, False o.w.
     Note: if the node id does not exists the function will do nothing
     """
+
     def remove_node(self, node_id: int) -> bool:
         if node_id in self.nodes:
             for n in list(self.children[node_id]):
@@ -125,6 +133,7 @@ class DiGraph(GraphInterface):
     @return: True if the edge was removed successfully, False o.w.
     Note: If such an edge does not exists the function will do nothing
     """
+
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         try:
             p = self.children[node_id1][node_id2]
@@ -140,8 +149,30 @@ class DiGraph(GraphInterface):
         else:
             return False
 
-    def __str__(self):
-        return str(self.nodes)
+    def __repr__(self):
+        st = ""
+        st += "Graph: |v|="
+        st += str(self.v_size())
+        st += " , |E|="
+        st += str(self.e_size())
+        st += "\n{"
+
+        for n in self.nodes.values():
+            st += str(n.id)
+            st += ": |edges out| "
+
+            for e in self.all_out_edges_of_node(n.id):
+                st += str(e)
+                st += " "
+
+            st += "|edges in| "
+            for e in self.all_in_edges_of_node(n.id):
+                st += str(e)
+                st += " "
+
+        st += "}"
+
+        return st
 
 
 class Node:
@@ -156,13 +187,14 @@ class Node:
 
     """ compare between 2 nodes by weight
     """
+
     def __lt__(self, other):
         return self.weight < getattr(other, 'weight', other)
 
     def __eq__(self, other):
         return self.weight == getattr(other, 'weight', other)
 
-    def __str__(self) -> str:
+    def __repr__(self):
         st = str(self.id)
         return st
 
