@@ -27,32 +27,31 @@ main classes:
   [Travelling_salesman_problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
 - save(): save the Graph as Json file
 - load(): allowing to load a Json file
-  
-  ## After runing chack1() we get the folow plot:<br />
-  ![image](https://user-images.githubusercontent.com/77111035/147135861-c6e53370-39be-4482-878e-c0245d2cbbc5.png)
-  ## After runing chack2() we get the folow plot:<br />
- ![image](https://user-images.githubusercontent.com/77111035/147135784-e396edf5-756a-42f5-bbc3-3a4f8fc09c82.png)
 
-  ## After runing chack3() we get the folow plot:<br />
-  ![image](https://user-images.githubusercontent.com/77111035/147135807-fc354638-b43b-4371-afe7-c08a3afa133b.png)
+  ## After runing chack0() we get the folow plot:<br />
+  ![image](https://user-images.githubusercontent.com/77155986/147466407-daa0f282-6c9a-4199-b9b3-e26383c448ce.png)
+  ## After runing chack1() we get the folow plot:<br />
+  ![image](https://user-images.githubusercontent.com/77155986/147466445-0ddb8b3f-f310-439a-9bb3-025242032cba.png)
+  ## After runing chack2() we get the folow plot:<br />
+ ![image](https://user-images.githubusercontent.com/77155986/147466486-bf5bab57-7722-4623-afaf-6f1fc910ad2f.png)
+
   
   ## TSP of A1.json on cities: [3, 8, 2, 9]:  
-  ![image](https://user-images.githubusercontent.com/77155986/147288789-c974c0a0-b5c9-46d6-b0b6-5db8240db75d.png)
+  ![image](https://user-images.githubusercontent.com/77155986/147466829-4980e4fa-205a-44db-ba83-b5f941c9d7c3.png)
 
   ## CENTER of A1.json:  
-  ![image](https://user-images.githubusercontent.com/77155986/147288678-c9a78cf6-2f0e-4684-86dd-02725d20f11c.png)
+  ![image](https://user-images.githubusercontent.com/77155986/147466868-994b803b-9986-4f55-afb9-ce5446dede89.png)
   
   ## SHORTEST PATH of A1.json from 5 to 10: 
-  ![image](https://user-images.githubusercontent.com/77155986/147288908-68cfe380-341f-48ec-93cb-ea18c6b6bb20.png)
+  ![image](https://user-images.githubusercontent.com/77155986/147466915-755ad505-c81f-40a1-963a-f8c7d8f3bbcc.png)
 
 
   # How to run the program : 
   in the main.py: go to main and create a AlgoGraph on this way:<br />
-  g_algo = GraphAlgo() <br />
-  file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
-  g_algo.load_from_json(file) <br />
-  then run the function "plot_graph" from GraphAlgo- its will ask you about showing the simple graph (like the images above) or Gui with options of runing the algorithms
-  like: TSP, Center, Load, Save and Shortest Path - Enjoy!<br />
+     * g_algo = GraphAlgo() <br />
+     * file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
+     * g_algo.load_from_json(file) <br />
+     * g_algo.plot_graph
 
   
   
