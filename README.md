@@ -29,11 +29,11 @@ main classes:
 - load(): allowing to load a Json file
 
   ## After runing chack0() we get the folow plot:<br />
-  ![image](https://user-images.githubusercontent.com/77155986/147466407-daa0f282-6c9a-4199-b9b3-e26383c448ce.png)
+  ![image](https://user-images.githubusercontent.com/77155986/147467181-a152ac5c-d46b-40f1-9013-9b7b7115366c.png)  
   ## After runing chack1() we get the folow plot:<br />
   ![image](https://user-images.githubusercontent.com/77155986/147466445-0ddb8b3f-f310-439a-9bb3-025242032cba.png)
   ## After runing chack2() we get the folow plot:<br />
- ![image](https://user-images.githubusercontent.com/77155986/147466486-bf5bab57-7722-4623-afaf-6f1fc910ad2f.png)
+  ![image](https://user-images.githubusercontent.com/77155986/147466486-bf5bab57-7722-4623-afaf-6f1fc910ad2f.png)
 
   
   ## TSP of A1.json on cities: [3, 8, 2, 9]:  
@@ -48,10 +48,10 @@ main classes:
 
   # How to run the program : 
   in the main.py: go to main and create a AlgoGraph on this way:<br />
-     * g_algo = GraphAlgo() <br />
-     * file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
-     * g_algo.load_from_json(file) <br />
-     * g_algo.plot_graph
+     - g_algo = GraphAlgo() <br />
+     - file = '../data/A5.json' (enter a jason file you wuold like to load) <br />
+     - g_algo.load_from_json(file) <br />
+     - g_algo.plot_graph
 
   
   
