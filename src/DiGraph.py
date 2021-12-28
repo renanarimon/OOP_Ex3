@@ -160,15 +160,11 @@ class DiGraph(GraphInterface):
         for n in self.nodes.values():
             st += str(n.id)
             st += ": |edges out| "
-
-            for e in self.all_out_edges_of_node(n.id):
-                st += str(e)
-                st += " "
+            st += str(len(self.all_out_edges_of_node(n.id)))
 
             st += "|edges in| "
-            for e in self.all_in_edges_of_node(n.id):
-                st += str(e)
-                st += " "
+            st += str(len(self.all_in_edges_of_node(n.id)))
+            st += ", "
 
         st += "}"
 

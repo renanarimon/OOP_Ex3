@@ -243,7 +243,7 @@ class GraphAlgo(GraphAlgoInterface):
 
     def centerPoint(self) -> (int, float):
         if not self.isConnected():
-            return -1, self.INFINITY
+            return None, self.INFINITY
 
         minDist = sys.maxsize
         minId = 0
@@ -406,8 +406,8 @@ class GraphAlgo(GraphAlgoInterface):
             src_y = gui_scale(src.pos[1], y=True)
             dest_x = gui_scale(dest.pos[0], x=True)
             dest_y = gui_scale(dest.pos[1], y=True)
-            draw_arrow((src_x, src_y), (dest_x, dest_y), 15, 5, white)
-            # pygame.draw.line(screen, color, (src_x, src_y), (dest_x, dest_y), width=2)
+            draw_arrow((src_x, src_y), (dest_x, dest_y), 15, 5, color)
+
 
         def drawEdges(n: Node, color: Color):
             for k in self.graph.all_out_edges_of_node(n.id):
