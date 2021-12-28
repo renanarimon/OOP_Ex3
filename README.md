@@ -1,9 +1,10 @@
 # OOP EX3 -  Directed Weighted Graph Python 
 
 this asssinment has written by [Taliya Shitreet](https://github.com/taliyashitreet "Profile") and  [Renana Rimon](https://github.com/renanarimon "Profile") <br />
-main classes:
 
-## DiGraph implement GraphInterface:
+## main classes:
+
+### 'DiGraph' implement 'GraphInterface':
 #### The class represents a basic graph structure, and allows:
 
 - add node
@@ -18,7 +19,7 @@ main classes:
 - childern : all edges going out
 - perants : all edges inter in
 
-## GraphAlgo implements GraphAlgoInterface:
+### 'GraphAlgo' implements 'GraphAlgoInterface':
 - isConnected(): check if graph is strongly connected.
 - shortestPath(): find shortest path between 2 nodes. (using Dijkstra algorithm) [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 - center(): find center node in graph
