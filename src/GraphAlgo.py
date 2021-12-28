@@ -160,7 +160,7 @@ class GraphAlgo(GraphAlgoInterface):
                 ans = i
         last = ans
         pathWeight = self.graph.nodes[last].weight
-        path, pathWeight = self.findParentPath(last, pathWeight, path)
+        path, weight = self.findParentPath(last, pathWeight, path)
         path.append(node_id)
         path.reverse()
         return ans, path, pathWeight
